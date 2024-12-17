@@ -1,68 +1,72 @@
 package io.motassadderoon;
 
-public class GeneratePrimes
-{
-    public static int[] generatePrimes(int maxValue)
-    {
-        if (maxValue >= 2)
-        {
-            int countOfValues = maxValue + 1;
+public class GeneratePrimes {
+    private static boolean[] crossedOut;
+    private static int[] result;
 
-            boolean[] crossedPrimeNumbersList = crossPrimeNumbersFromAList(countOfValues);
-
-            return getPrimeNumbers(countOfValues, crossedPrimeNumbersList);
-        }
-        else
+    public static int[] generatePrimes(int maxValue) {
+        if (maxValue < 2)
             return new int[0];
+        else {
+            crossOutIntegersUpTo(maxValue);
+            uncrossMultiples();
+            putCrossedOutIntegersIntoResult();
+            return result;
+        }
     }
 
-    private static int[] getPrimeNumbers(int countOfValues, boolean[] isPrimeNumbersList) {
-        int countOfPrimeNumbers = getCountOfPrimeNumbers(countOfValues, isPrimeNumbersList);
 
-        return getPrimesFromIsPrimeList(countOfValues, countOfPrimeNumbers, isPrimeNumbersList);
+    private static void crossOutIntegersUpTo(int maxValue) {
+        crossedOut = new boolean[maxValue + 1];
+        for (int i = 2; i < crossedOut.length; i++)
+            crossedOut[i] = true;
 
     }
 
-    private static int[] getPrimesFromIsPrimeList(int countOfValues, int countOfPrimeNumbers, boolean[] isPrimeNumbersList) {
+    private static void uncrossMultiples() {
         int i;
+        for (i = 2; i < determineIterationLimit(); i++) {
+            uncrossMultiplesOf(i);
+        }
+    }
+
+    private static int determineIterationLimit() {
+        return (int) Math.sqrt(crossedOut.length);
+    }
+
+    private static void uncrossMultiplesOf(int i) {
+        int multiple;
+        if (isCrossed(i)) {
+            for (multiple = 2 * i; multiple < crossedOut.length; multiple += i)
+                uncross(multiple);
+        }
+    }
+
+    private static void uncross(int i) {
+        crossedOut[i] = false;
+    }
+
+    private static void putCrossedOutIntegersIntoResult() {
+        result = new int[getCountOfPrimes()];
         int j;
-        int[] primes = new int[countOfPrimeNumbers];
-        for (i = 0, j = 0; i < countOfValues; i++)
-        {
-            if (isPrimeNumbersList[i])
-                primes[j++] = i;
+        int i;
+        for (i = 0, j = 0; i < crossedOut.length; i++) {
+            if (isCrossed(i))
+                result[j++] = i;
         }
-        return primes;
     }
 
-    private static int getCountOfPrimeNumbers(int s, boolean[] isPrimeNumbersList) {
-        int countOfPrimeNumbers = 0;
+    private static int getCountOfPrimes() {
         int i;
-        for (i = 0; i < s; i++)
-        {
-            if (isPrimeNumbersList[i])
-                countOfPrimeNumbers++;
+        int countOfPrimes = 0;
+        for (i = 0; i < crossedOut.length; i++) {
+            if (isCrossed(i))
+                countOfPrimes++; // bump count.
         }
-        return countOfPrimeNumbers;
+        return countOfPrimes;
     }
 
-    private static boolean[] crossPrimeNumbersFromAList(int countOfValues) {
-        boolean[] isPrimeNumbersList = new boolean[countOfValues];
-        int i;
-        for (i = 0; i < countOfValues; i++)
-            isPrimeNumbersList[i] = true;
-        isPrimeNumbersList[0] = isPrimeNumbersList[1] = false;
-
-        int j;
-        double squareRootOfValues = Math.sqrt(countOfValues);
-        for (i = 2; i < squareRootOfValues + 1; i++)
-        {
-            if (isPrimeNumbersList[i])
-            {
-                for (j = 2 * i; j < countOfValues; j += i)
-                    isPrimeNumbersList[j] = false;
-            }
-        }
-        return isPrimeNumbersList;
+    private static boolean isCrossed(int i) {
+        return crossedOut[i];
     }
 }
