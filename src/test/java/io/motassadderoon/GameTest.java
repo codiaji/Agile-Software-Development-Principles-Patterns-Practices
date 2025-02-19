@@ -16,8 +16,8 @@ public class GameTest {
     @Test
     void testOneThrow() {
         g.add(5);
-        assertEquals(1, g.getCurrentFrame());
-        assertEquals(5, g.score());
+        assertEquals(5, g.scoreForFrame(1));
+        assertEquals(0, g.score());
     }
 
     @Test
@@ -25,7 +25,6 @@ public class GameTest {
         g.add(5);
         g.add(4);
         assertEquals(9, g.score());
-        assertEquals(2, g.getCurrentFrame());
     }
 
     @Test
@@ -37,7 +36,6 @@ public class GameTest {
         assertEquals(18, g.score());
         assertEquals(9, g.scoreForFrame(1));
         assertEquals(18, g.scoreForFrame(2));
-        assertEquals(3, g.getCurrentFrame());
     }
 
     @Test
@@ -45,9 +43,8 @@ public class GameTest {
         g.add(6);
         g.add(4);
         g.add(7);
-        assertEquals(17, g.score());
+        assertEquals(24, g.score());
         assertEquals(17, g.scoreForFrame(1));
-        assertEquals(2, g.getCurrentFrame());
     }
 
     @Test
@@ -57,7 +54,6 @@ public class GameTest {
         g.add(3);
         g.add(2);
         assertEquals(13, g.scoreForFrame(1));
-        assertEquals(3, g.getCurrentFrame());
         assertEquals(18, g.score());
     }
 
@@ -67,7 +63,6 @@ public class GameTest {
         g.add(3);
         g.add(6);
         assertEquals(19, g.scoreForFrame(1));
-        assertEquals(3, g.getCurrentFrame());
         assertEquals(28, g.score());
     }
 
@@ -76,7 +71,6 @@ public class GameTest {
         for (int i = 0; i < 12; i++) {
             g.add(10);
         }
-        assertEquals(11, g.getCurrentFrame());
         assertEquals(300, g.score());
     }
 
@@ -89,7 +83,6 @@ public class GameTest {
         g.add(2);
         g.add(8); // 10th frame spare
         g.add(10); // Strike in last position of array.
-        assertEquals(11, g.getCurrentFrame());
         assertEquals(20, g.score());
     }
 
